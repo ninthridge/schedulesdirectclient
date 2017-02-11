@@ -25,12 +25,12 @@ public class SdClientTest {
   
   @Test
   public void testClient() throws SchedulesDirectException, IOException {
-    Token token = SdClient.requestToken(username, password);
+    Token token = new SdClient().requestToken(username, password);
     Assert.assertNotNull(token);
     Assert.assertNotNull(token.getToken());
     Assert.assertNotNull(token.getCreatedDate());
   
-    List<Lineup> lineups = SdClient.getLineups(token);
+    List<Lineup> lineups = new SdClient().getLineups(token);
     Assert.assertNotNull(lineups);
     System.out.println("lineups:" + lineups.size());
     
@@ -43,12 +43,12 @@ public class SdClientTest {
     
     Assert.assertNotNull(lineup);
     
-    List<Station> stations = SdClient.getStations(token, lineups.get(0));
+    List<Station> stations = new SdClient().getStations(token, lineups.get(0));
     Assert.assertNotNull(stations);
     Assert.assertFalse(stations.isEmpty());
     System.out.println("stations:" + stations.size());
     
-    List<Schedule> schedules = SdClient.getSchedules(token, stations);
+    List<Schedule> schedules = new SdClient().getSchedules(token, stations);
     Assert.assertNotNull(schedules);
     Assert.assertFalse(schedules.isEmpty());
     System.out.println("schedules:" + schedules.size());
@@ -69,7 +69,7 @@ public class SdClientTest {
     Assert.assertFalse(programIds.isEmpty());
     System.out.println("programIds:" + programIds.size());
     
-    List<Program> programs = SdClient.getPrograms(token, programIds);
+    List<Program> programs = new SdClient().getPrograms(token, programIds);
     Assert.assertNotNull(programs);
     Assert.assertFalse(programs.isEmpty());
     System.out.println("programs:" + programs.size());

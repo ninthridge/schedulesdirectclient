@@ -31,18 +31,18 @@ import com.ninthridge.schedulesdirectclient.model.Token;
 
 public class SdClient {
 
-  public static String HOST = "json.schedulesdirect.org";
-  public static String API_VERSION = "20141201";
-  public static String USER_AGENT = "com.ninthridge.schedulesdirectclient";
+  public final static String HOST = "json.schedulesdirect.org";
+  public final static String API_VERSION = "20141201";
+  public final static String USER_AGENT = "com.ninthridge.schedulesdirectclient";
   
-  private static ObjectMapper objectMapper;
+  private final static ObjectMapper objectMapper;
   
   static {
     objectMapper = new ObjectMapper();
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
   
-  public static Token requestToken(String username, String password) throws SchedulesDirectException, IOException {
+  public Token requestToken(String username, String password) throws SchedulesDirectException, IOException {
     Map<String, String> requestBodyObj = new HashMap<>();
     requestBodyObj.put("username", username);
     requestBodyObj.put("password", DigestUtils.sha1Hex(password));
@@ -67,7 +67,7 @@ public class SdClient {
     }
   }
 
-  public static Status getStatus(Token token) throws SchedulesDirectException, IOException {
+  public Status getStatus(Token token) throws SchedulesDirectException, IOException {
     HttpResponse response = Request.Get("https://" + HOST + "/" + API_VERSION + "/status")
         .userAgent(USER_AGENT)
         .addHeader("token", token.getToken())
@@ -86,7 +86,7 @@ public class SdClient {
     }
   }
 
-  public static List<Headend> getHeadends(Token token, String countryCode, String postalCode) throws SchedulesDirectException, IOException {
+  public List<Headend> getHeadends(Token token, String countryCode, String postalCode) throws SchedulesDirectException, IOException {
     HttpResponse response = Request.Get("https://" + HOST + "/" + API_VERSION + "/headends?country=" + URLEncoder.encode(countryCode, "UTF-8") + "&postalcode=" + URLEncoder.encode(postalCode, "UTF-8"))
         .userAgent(USER_AGENT)
         .addHeader("token", token.getToken())
@@ -105,7 +105,7 @@ public class SdClient {
     }
   }
 
-  public static List<Lineup> getLineups(Token token) throws SchedulesDirectException, IOException {
+  public List<Lineup> getLineups(Token token) throws SchedulesDirectException, IOException {
     HttpResponse response = Request.Get("https://" + HOST + "/" + API_VERSION + "/lineups")
         .userAgent(USER_AGENT)
         .addHeader("token", token.getToken())
@@ -124,7 +124,7 @@ public class SdClient {
     }
   }
 
-  public static void addLineup(Token token, String lineup) throws SchedulesDirectException, IOException {
+  public void addLineup(Token token, String lineup) throws SchedulesDirectException, IOException {
     HttpResponse response = Request.Put("https://" + HOST + "/" + API_VERSION + "/lineups/" + URLEncoder.encode(lineup, "UTF-8"))
         .userAgent(USER_AGENT)
         .addHeader("token", token.getToken())
@@ -154,7 +154,7 @@ public class SdClient {
     }
   }
 
-  public static List<Station> getStations(Token token, Lineup lineup) throws SchedulesDirectException, IOException {
+  public List<Station> getStations(Token token, Lineup lineup) throws SchedulesDirectException, IOException {
     HttpResponse response = Request.Get("https://" + HOST + "/" + API_VERSION + "/lineups/" + URLEncoder.encode(lineup.getLineup(), "UTF-8"))
         .userAgent(USER_AGENT)
         .addHeader("token", token.getToken())
@@ -191,7 +191,7 @@ public class SdClient {
   }
 
   @SuppressWarnings("unchecked")
-  public static List<Schedule> getSchedules(Token token, List<Station> stations) throws SchedulesDirectException, IOException {
+  public List<Schedule> getSchedules(Token token, List<Station> stations) throws SchedulesDirectException, IOException {
     List<Schedule> schedules = new ArrayList<Schedule>();
     for(List<Station> splitStations : split(stations, 5000)) {
       
@@ -226,7 +226,7 @@ public class SdClient {
   }
   
   @SuppressWarnings("unchecked")
-  public static List<Program> getPrograms(Token token, List<String> programIds) throws SchedulesDirectException, IOException {
+  public List<Program> getPrograms(Token token, List<String> programIds) throws SchedulesDirectException, IOException {
     List<Program> programs = new ArrayList<Program>();
     for(List<String> progIds : split(programIds, 5000)) {
       HttpResponse response = Request.Post("https://" + HOST + "/" + API_VERSION + "/programs")
@@ -251,7 +251,7 @@ public class SdClient {
     return programs;
   }
   
-  private static <T> List<List<T>> split(List<T> objects, int size) {
+  private <T> List<List<T>> split(List<T> objects, int size) {
     List<List<T>> split = new ArrayList<>();
     for (int i = 0; (i * size) < objects.size(); i++) {
       int start = i * size;
